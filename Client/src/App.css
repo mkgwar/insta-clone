@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@layer base {
+  body {
+    @apply bg-gray-50;
+  }
+}
+
+.screen {
+  animation: image-animation 6s infinite;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@keyframes image-animation {
+  0% {
+    background-image: url("/public/images/1.jpg");
+  }
+  25% {
+    background-image: url("/public/images/2.jpg");
+  }
+  50% {
+    background-image: url("/public/images/3.png");
+  }
+  75% {
+    background-image: url("/public/images/4.jpg");
+  }
+  100% {
+    background-image: url("/public/images/1.jpg");
+  }
+}
+
+.black-screen {
+  background-image: url("/public/images/5.jpg");
+  background-size: cover;
+  background-position: 40%;
+  background-repeat: no-repeat;
+}
