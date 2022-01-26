@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
+import * as controller from "./controllers/index.js";
 
 const app = express();
 app.use(cors());
@@ -19,3 +20,5 @@ mongoose
     app.listen(PORT, () => console.log(`server running at port ${PORT}`))
   )
   .catch((error) => console.log(error.message));
+
+app.post("/signup", controller.signupMiddleware, controller.signup);
