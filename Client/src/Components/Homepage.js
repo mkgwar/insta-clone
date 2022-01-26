@@ -1,5 +1,5 @@
 import BlackPhone from "./BlackPhone";
-import SignInSignUp from "./SignInSignUp";
+import SignIn from "./SignIn";
 import WhitePhone from "./WhitePhone";
 
 const Homepage = () => {
@@ -12,7 +12,7 @@ const Homepage = () => {
         <WhitePhone />
       </div>
       <div>
-        <SignInSignUp />
+        <SignIn />
       </div>
     </div>
   );

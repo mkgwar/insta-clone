@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
-const SignInSignUp = () => {
+const SignUp = () => {
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
   const [showError, setshowError] = useState(false);
@@ -24,7 +25,10 @@ const SignInSignUp = () => {
   return (
     <div>
       <div className="p-8 bg-white flex flex-col items-center border-2 border-gray-200">
-        <h1 className="text-3xl font-bold mb-8">Insta Clone</h1>
+        <h1 className="text-3xl font-bold mb-8">
+          <Link to="/">Insta Clone</Link>
+        </h1>
+
         <input
           type="text"
           placeholder="Username"
@@ -47,21 +51,26 @@ const SignInSignUp = () => {
               : "bg-blue-300 pointer-events-none")
           }
         >
-          Log In
+          Sign Up
         </button>
 
-        {showError && (
-          <div className="mt-8 text-red-500">
-            Username or password is incorrect.
-          </div>
-        )}
+        <div className="mt-8">
+          Username: min 3 characters
+          <br />
+          Password: min 8 characters
+        </div>
+
+        {showError && <div className="mt-8 text-red-600">Username exists</div>}
       </div>
 
       <div className="p-4 bg-white text-center mt-4 border-2 border-gray-200">
-        Don't have an account? Sign up
+        Have an account?{" "}
+        <Link to="/signin" className="text-blue-600">
+          Sign in
+        </Link>
       </div>
     </div>
   );
 };
 
-export default SignInSignUp;
+export default SignUp;
