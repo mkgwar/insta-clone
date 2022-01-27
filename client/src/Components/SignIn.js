@@ -4,7 +4,7 @@ import * as api from "../API/index";
 
 const blankUser = { username: "", password: "" };
 
-const SignIn = () => {
+const SignIn = ({ settoken }) => {
   const [userData, setuserData] = useState(blankUser);
   const [showError, setshowError] = useState(false);
   const [displayMessage, setdisplayMessage] = useState("");
@@ -38,7 +38,8 @@ const SignIn = () => {
       setisPasswordCorrect(false);
       setisUsernameCorrect(false);
     } else if (data.status === "OK") {
-      navigate(`/user/${data.username}`, { state: data });
+      localStorage.setItem("token", data.token);
+      navigate(`/user/${data.username}`);
     }
   };
 

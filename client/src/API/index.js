@@ -13,7 +13,7 @@ export const signin = async (userData) => {
 };
 
 export const getProfileData = async (username, token) => {
-  const { data } = axios.get(`${URL}/user/${username}`, {
+  const { data } = await axios.get(`${URL}/user/${username}`, {
     headers: {
       authorization: token,
     },

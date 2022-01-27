@@ -11,6 +11,9 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
   },
+
+  desc: { type: String, default: "" },
+  profilePic: { type: String, default: "" },
 });
 
 userSchema.methods.saveData = async function () {
