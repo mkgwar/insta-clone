@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
 import * as controller from "./controllers/index.js";
+import userRoutes from "./Routes/user.js";
 
 const app = express();
 app.use(cors());
@@ -22,3 +23,6 @@ mongoose
   .catch((error) => console.log(error.message));
 
 app.post("/signup", controller.signupMiddleware, controller.signup);
+app.post("/signin", controller.signin);
+
+app.use("/user", userRoutes);

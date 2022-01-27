@@ -1,25 +1,45 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import * as api from "../API/index";
+
+const blankUser = { username: "", password: "" };
 
 const SignIn = () => {
-  const [username, setusername] = useState("");
-  const [password, setpassword] = useState("");
+  const [userData, setuserData] = useState(blankUser);
   const [showError, setshowError] = useState(false);
+  const [displayMessage, setdisplayMessage] = useState("");
   const [isUsernameCorrect, setisUsernameCorrect] = useState(false);
   const [isPasswordCorrect, setisPasswordCorrect] = useState(false);
+  const navigate = useNavigate();
 
   const usernameChange = (event) => {
-    setusername(event.target.value);
+    setuserData({ ...userData, username: event.target.value });
+    setshowError(false);
 
     if (event.target.value.length >= 3) setisUsernameCorrect(true);
     else setisUsernameCorrect(false);
   };
 
   const passwordChange = (event) => {
-    setpassword(event.target.value);
+    setshowError(false);
+    setuserData({ ...userData, password: event.target.value });
 
     if (event.target.value.length >= 8) setisPasswordCorrect(true);
     else setisPasswordCorrect(false);
+  };
+
+  const signIn = async () => {
+    const data = await api.signin(userData);
+
+    if (data.status === "Error") {
+      setshowError(true);
+      setdisplayMessage(data.message);
+      setuserData(blankUser);
+      setisPasswordCorrect(false);
+      setisUsernameCorrect(false);
+    } else if (data.status === "OK") {
+      navigate(`/user/${data.username}`, { state: data });
+    }
   };
 
   return (
@@ -32,14 +52,14 @@ const SignIn = () => {
         <input
           type="text"
           placeholder="Username"
-          value={username}
+          value={userData.username}
           onChange={usernameChange}
           className="px-4 py-2 bg-gray-50 border-2 border-gray-200 w-72 text-sm focus:outline-none rounded-md"
         />
         <input
           type="password"
           placeholder="Password"
-          value={password}
+          value={userData.password}
           onChange={passwordChange}
           className="px-4 py-2 bg-gray-50 border-2 border-gray-200 w-72 text-sm focus:outline-none rounded-md mt-2"
         />
@@ -50,15 +70,12 @@ const SignIn = () => {
               ? "bg-blue-500 pointer-events-auto"
               : "bg-blue-300 pointer-events-none")
           }
+          onClick={signIn}
         >
           Log In
         </button>
 
-        {showError && (
-          <div className="mt-8 text-red-500">
-            Username or password is incorrect.
-          </div>
-        )}
+        {showError && <div className="mt-8 text-red-500">{displayMessage}</div>}
       </div>
 
       <div className="p-4 bg-white text-center mt-4 border-2 border-gray-200">

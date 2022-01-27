@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import * as api from "../API/index";
 
+const blankUser = { username: "", password: "" };
+
 const SignUp = () => {
-  const [username, setusername] = useState("");
-  const [password, setpassword] = useState("");
-  const [userData, setuserData] = useState({});
   const [showError, setshowError] = useState(false);
   const [showSuccess, setshowSuccess] = useState(false);
+  const [userData, setuserData] = useState(blankUser);
   const [displayMessage, setdisplayMessage] = useState("");
   const [isUsernameCorrect, setisUsernameCorrect] = useState(false);
   const [isPasswordCorrect, setisPasswordCorrect] = useState(false);
@@ -16,7 +16,7 @@ const SignUp = () => {
     setshowSuccess(false);
     setshowError(false);
 
-    setusername(event.target.value);
+    setuserData({ ...userData, username: event.target.value });
 
     if (event.target.value.length >= 3) setisUsernameCorrect(true);
     else setisUsernameCorrect(false);
@@ -25,37 +25,28 @@ const SignUp = () => {
   const passwordChange = (event) => {
     setshowSuccess(false);
     setshowError(false);
-    setpassword(event.target.value);
+    setuserData({ ...userData, password: event.target.value });
 
     if (event.target.value.length >= 8) setisPasswordCorrect(true);
     else setisPasswordCorrect(false);
   };
 
-  const signUp = () => {
-    setuserData({ username: username, password: password });
-  };
-
-  useEffect(async () => {
+  const signUp = async () => {
     const data = await api.signup(userData);
 
     if (data.status === "OK") {
       setshowSuccess(true);
       setshowError(false);
-      setusername("");
-      setpassword("");
-      setisUsernameCorrect(false);
-      setisPasswordCorrect(false);
     } else if (data.status === "Error") {
       setshowError(true);
       setshowSuccess(false);
-      setusername("");
-      setpassword("");
-      setisUsernameCorrect(false);
-      setisPasswordCorrect(false);
     }
 
+    setuserData(blankUser);
+    setisUsernameCorrect(false);
+    setisPasswordCorrect(false);
     setdisplayMessage(data.message);
-  }, [userData]);
+  };
 
   return (
     <div>
@@ -67,14 +58,14 @@ const SignUp = () => {
         <input
           type="text"
           placeholder="Username"
-          value={username}
+          value={userData.username}
           onChange={usernameChange}
           className="px-4 py-2 bg-gray-50 border-2 border-gray-200 w-72 text-sm focus:outline-none rounded-md"
         />
         <input
           type="password"
           placeholder="Password"
-          value={password}
+          value={userData.password}
           onChange={passwordChange}
           className="px-4 py-2 bg-gray-50 border-2 border-gray-200 w-72 text-sm focus:outline-none rounded-md mt-2"
         />
