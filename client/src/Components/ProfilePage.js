@@ -11,6 +11,8 @@ const ProfilePage = () => {
   const [displayMessage, setdisplayMessage] = useState("");
   const [openMenu, setopenMenu] = useState(false);
   const [displayData, setdisplayData] = useState(blankUser);
+  const [openEdit, setopenEdit] = useState(false);
+  const [updatedDesc, setupdatedDesc] = useState(displayData.desc);
 
   useEffect(() => {
     getUserData();
@@ -19,6 +21,25 @@ const ProfilePage = () => {
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/");
+  };
+
+  const toggleEdit = (event) => {
+    event.preventDefault();
+    setopenEdit(!openEdit);
+  };
+
+  const descHandler = (event) => {
+    setupdatedDesc(event.target.value);
+  };
+
+  const updateDesc = async (event) => {
+    if (event.key === "Enter") {
+      const data = await api.updateDesc(username, { updatedDesc });
+
+      if (data.status === "OK")
+        setdisplayData({ ...displayData, desc: updatedDesc });
+      setopenEdit(false);
+    }
   };
 
   const uploadPic = async (event) => {
@@ -46,6 +67,8 @@ const ProfilePage = () => {
         desc: data._doc.desc,
         profilePic: data._doc.profilePic,
       });
+
+      setupdatedDesc(data._doc.desc);
     }
   };
 
@@ -88,8 +111,8 @@ const ProfilePage = () => {
           {displayMessage}
         </div>
       ) : (
-        <div className="w-full mx-auto py-4 px-8 max-w-6xl flex items-center gap-16">
-          <div className="w-1/2 flex justify-end">
+        <div className="w-full mx-auto py-4 px-8 max-w-6xl flex items-start gap-16">
+          <div className="w-2/5 flex justify-end">
             <div className="bg-gray-200 h-40 w-40 rounded-full relative">
               {displayData.profilePic !== "" && (
                 <img
@@ -123,12 +146,29 @@ const ProfilePage = () => {
             <div className="flex w-full justify-between">
               <h1 className="text-4xl">{displayData.username}</h1>
               {displayData.isEditable && (
-                <button className="px-6 py-1 bg-white border-2 border-gray-200 rounded-lg">
+                <button
+                  className="px-6 py-1 bg-white border-2 border-gray-200 rounded-lg"
+                  onClick={toggleEdit}
+                >
                   Edit
                 </button>
               )}
             </div>
-            <div className="w-full mt-8">{displayData.desc}</div>
+            <div className="w-full mt-8">
+              {openEdit ? (
+                <div>
+                  <textarea
+                    value={updatedDesc}
+                    onChange={descHandler}
+                    className="w-3/5 h-32 p-4 resize-none focus:outline-none border-gray-200 border-2"
+                    placeholder="Add a description"
+                    onKeyDown={updateDesc}
+                  />
+                </div>
+              ) : (
+                <div className="w-3/5">{displayData.desc}</div>
+              )}
+            </div>
           </div>
         </div>
       )}

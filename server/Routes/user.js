@@ -69,4 +69,14 @@ router.post(
   }
 );
 
+router.post("/:username/updatedesc", async (req, res) => {
+  const { username } = req.params;
+  console.log(req.body);
+  const { updatedDesc } = req.body;
+
+  await model.user.updateOne({ username }, { desc: updatedDesc });
+
+  res.json({ status: "OK", message: "Description updated successfully." });
+});
+
 export default router;
