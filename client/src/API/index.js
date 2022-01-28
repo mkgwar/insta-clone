@@ -20,3 +20,8 @@ export const getProfileData = async (username, token) => {
   });
   return data;
 };
+
+export const uploadPic = async (username, pic) => {
+  const { data } = await axios.post(`${URL}/user/${username}/profilepic`, pic);
+  return data;
+};

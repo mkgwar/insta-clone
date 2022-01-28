@@ -42,9 +42,7 @@ export const signin = async (req, res) => {
       res.json({ status: "Error", message: "Username or password incorrect." });
     } else {
       const payload = { username: username };
-      const token = jwt.sign(payload, "topsecretcode", {
-        expiresIn: "30m",
-      });
+      const token = jwt.sign(payload, "topsecretcode");
       res.json({
         status: "OK",
         message: "Login successful",
