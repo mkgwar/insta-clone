@@ -1,26 +1,37 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import * as api from "../API/index";
+
+const blankUser = { username: "", isEditable: false, desc: "", profilePic: "" };
 
 const ProfilePage = () => {
   const { username } = useParams();
+  const navigate = useNavigate();
   const [showError, setshowError] = useState(false);
   const [displayMessage, setdisplayMessage] = useState("");
-  const [displayData, setdisplayData] = useState({});
+  const [openMenu, setopenMenu] = useState(false);
+  const [displayData, setdisplayData] = useState(blankUser);
 
   useEffect(() => {
     getUserData();
   }, []);
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   const uploadPic = async (event) => {
-    const formdata = new FormData();
-    formdata.append("profilepic", event.target.files[0]);
-    const data = await api.uploadPic(username, formdata);
-    setdisplayData({ ...displayData, profilePic: data.profilePic });
+    if (event.target.files.length > 0) {
+      const formdata = new FormData();
+      formdata.append("profilepic", event.target.files[0]);
+      const data = await api.uploadPic(username, formdata);
+      setdisplayData({ ...displayData, profilePic: data.profilePic });
+    }
   };
 
   const getUserData = async () => {
-    const token = localStorage.getItem("token") || null;
+    const token = localStorage.getItem("token") || "NO_TOKEN_FOUND";
     const data = await api.getProfileData(username, token);
 
     if (data.status === "Error") {
@@ -40,9 +51,35 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <div className="w-full bg-white">
-        <div className="w-full mx-auto p-4 px-8 bg-white max-w-6xl">
-          <h1 className="font-bold text-3xl">Insta Clone</h1>
+      <div className="w-full bg-white border-b-2 border-gray-200">
+        <div className="w-full mx-auto p-4 px-8 bg-white max-w-6xl flex items-center justify-between">
+          <h1 className="font-bold text-3xl w-full">Insta Clone</h1>
+          {displayData.isEditable && (
+            <div className="relative h-full">
+              <div
+                className="h-12 w-12 rounded-full bg-gray-200 cursor-pointer"
+                onClick={() => setopenMenu(!openMenu)}
+              >
+                {displayData.profilePic !== "" && (
+                  <img
+                    src={displayData.profilePic}
+                    alt=""
+                    className="h-full w-full object-cover rounded-full"
+                  />
+                )}
+              </div>
+              {openMenu && (
+                <div className="bg-white border-2 border-gray-200 absolute top-full left-1/2 -translate-x-1/2 z-10 overflow-auto flex flex-col mt-2">
+                  <span
+                    className="py-4 px-8 hover:bg-gray-200 cursor-pointer"
+                    onClick={logout}
+                  >
+                    Logout
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -54,7 +91,7 @@ const ProfilePage = () => {
         <div className="w-full mx-auto py-4 px-8 max-w-6xl flex items-center gap-16">
           <div className="w-1/2 flex justify-end">
             <div className="bg-gray-200 h-40 w-40 rounded-full relative">
-              {displayData.profilePic != "" && (
+              {displayData.profilePic !== "" && (
                 <img
                   src={displayData.profilePic}
                   alt=""

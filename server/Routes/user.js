@@ -19,7 +19,7 @@ const profilepic = multer({ storage: storage });
 
 const authenticateUser = (req, res, next) => {
   const token = req.headers["authorization"];
-  if (token != null) {
+  if (token != "NO_TOKEN_FOUND") {
     const result = jwt.verify(token, "topsecretcode");
     req.authUsername = result.username;
   } else {

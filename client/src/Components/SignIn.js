@@ -4,7 +4,7 @@ import * as api from "../API/index";
 
 const blankUser = { username: "", password: "" };
 
-const SignIn = ({ settoken }) => {
+const SignIn = () => {
   const [userData, setuserData] = useState(blankUser);
   const [showError, setshowError] = useState(false);
   const [displayMessage, setdisplayMessage] = useState("");
