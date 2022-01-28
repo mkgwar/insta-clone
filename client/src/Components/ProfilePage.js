@@ -34,6 +34,7 @@ const ProfilePage = () => {
 
   const updateDesc = async (event) => {
     if (event.key === "Enter") {
+      event.preventDefault();
       const data = await api.updateDesc(username, { updatedDesc });
 
       if (data.status === "OK")
