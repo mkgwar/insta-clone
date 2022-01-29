@@ -85,7 +85,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div>
+    <div className={openPicMenu ? "fixed h-screen w-screen" : ""}>
       <div className="w-full bg-white border-b-2 border-gray-200">
         <div className="w-full mx-auto p-4 h-20 bg-white max-w-6xl flex items-center justify-between">
           <h1 className="font-bold text-3xl w-full">Insta Clone</h1>

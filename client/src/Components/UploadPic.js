@@ -29,7 +29,7 @@ const UploadPic = ({ setopenPicMenu, username, uploadList, setuploadList }) => {
   };
 
   return (
-    <div className="h-screen w-screen left-0 top-0 bg-black bg-opacity-50 absolute flex justify-center items-center">
+    <div className=" left-0 top-0 bottom-0 right-0 bg-black bg-opacity-50 absolute flex justify-center items-center">
       <div className="bg-white p-8 shadow-md">
         <h1 className="text-2xl mb-8">Upload</h1>
         <div className="flex gap-8">
