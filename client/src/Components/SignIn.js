@@ -39,6 +39,7 @@ const SignIn = () => {
       setisUsernameCorrect(false);
     } else if (data.status === "OK") {
       localStorage.setItem("token", data.token);
+      localStorage.setItem("authUser", data.username);
       navigate(`/user/${data.username}`);
     }
   };

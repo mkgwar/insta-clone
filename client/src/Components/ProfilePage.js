@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useParams, useNavigate } from "react-router-dom";
 import * as api from "../API/index";
 
@@ -6,8 +7,9 @@ const blankUser = { username: "", isEditable: false, desc: "", profilePic: "" };
 
 const ProfilePage = () => {
   const { username } = useParams();
+  const authUser = localStorage.getItem("authUser") || "NO_USER_FOUND";
   const navigate = useNavigate();
-  const [showError, setshowError] = useState(false);
+  const [showError, setshowError] = useState(true);
   const [displayMessage, setdisplayMessage] = useState("");
   const [openMenu, setopenMenu] = useState(false);
   const [displayData, setdisplayData] = useState(blankUser);
@@ -16,10 +18,11 @@ const ProfilePage = () => {
 
   useEffect(() => {
     getUserData();
-  }, []);
+  }, [username]);
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("authUser");
     navigate("/");
   };
 
@@ -59,26 +62,28 @@ const ProfilePage = () => {
     if (data.status === "Error") {
       setshowError(true);
       setdisplayMessage(data.message);
-    } else setshowError(false);
+    }
 
     if (data.status === "OK") {
       setdisplayData({
         username: data._doc.username,
-        isEditable: data.isEditable,
         desc: data._doc.desc,
         profilePic: data._doc.profilePic,
+        isEditable: data.isEditable,
       });
 
       setupdatedDesc(data._doc.desc);
+      setshowError(false);
     }
   };
 
   return (
     <div>
       <div className="w-full bg-white border-b-2 border-gray-200">
-        <div className="w-full mx-auto p-4 px-8 bg-white max-w-6xl flex items-center justify-between">
+        <div className="w-full mx-auto p-4 h-20 bg-white max-w-6xl flex items-center justify-between">
           <h1 className="font-bold text-3xl w-full">Insta Clone</h1>
-          {displayData.isEditable && (
+
+          {authUser === username && authUser !== "NO_USER_FOUND" && (
             <div className="relative h-full">
               <div
                 className="h-12 w-12 rounded-full bg-gray-200 cursor-pointer"
@@ -102,6 +107,23 @@ const ProfilePage = () => {
                   </span>
                 </div>
               )}
+            </div>
+          )}
+          {authUser !== username && authUser !== "NO_USER_FOUND" && (
+            <div className="w-fit whitespace-nowrap text-blue-600">
+              <Link to={"/user/" + authUser}>Go to your profile</Link>
+            </div>
+          )}
+
+          {authUser === "NO_USER_FOUND" && authUser !== username && (
+            <div className="w-fit whitespace-nowrap space-x-4">
+              <Link to="/signin">Sign in</Link>
+              <button
+                className="px-2 py-1 border-2 border-gray-200"
+                onClick={() => navigate("/signup")}
+              >
+                Sign Up
+              </button>
             </div>
           )}
         </div>
