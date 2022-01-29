@@ -22,6 +22,7 @@ const ProfileUploads = ({
                 className="relative cursor-pointer"
                 onClick={() => arrangeImageData(upload)}
               >
+                <div className="absolute h-full w-full hover:bg-black hover:bg-opacity-25" />
                 <img
                   src={upload.image}
                   alt=""

@@ -172,7 +172,7 @@ const ProfilePage = () => {
                   />
                 )}
                 {displayData.isEditable && (
-                  <div className="h-full w-full bg-black opacity-0 rounded-full z-10 absolute text-white font-bold hover:bg-opacity-25 hover:opacity-100">
+                  <div className="h-full w-full bg-black opacity-0 rounded-full z-2 absolute text-white font-bold hover:bg-opacity-25 hover:opacity-100">
                     <label
                       htmlFor="profilepic"
                       className="w-full h-full flex justify-center items-center cursor-pointer"
