@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams, useNavigate } from "react-router-dom";
 import * as api from "../API/index";
+import ImagePage from "./ImagePage";
 import ProfileUploads from "./ProfileUploads";
 import UploadPic from "./UploadPic";
 
@@ -19,6 +20,8 @@ const ProfilePage = () => {
   const [updatedDesc, setupdatedDesc] = useState(displayData.desc);
   const [openPicMenu, setopenPicMenu] = useState(false);
   const [uploadList, setuploadList] = useState([]);
+  const [openImageViewer, setopenImageViewer] = useState(false);
+  const [imageData, setimageData] = useState({});
 
   useEffect(() => {
     getUserData();
@@ -28,6 +31,11 @@ const ProfilePage = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("authUser");
     navigate("/");
+  };
+
+  const arrangeImageData = (upload) => {
+    setopenImageViewer(true);
+    setimageData({ ...upload, profilePic: displayData.profilePic });
   };
 
   const toggleEdit = (event) => {
@@ -85,7 +93,11 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className={openPicMenu ? "fixed h-screen w-screen" : ""}>
+    <div
+      className={
+        openPicMenu || openImageViewer ? "fixed h-screen w-screen" : ""
+      }
+    >
       <div className="w-full bg-white border-b-2 border-gray-200">
         <div className="w-full mx-auto p-4 h-20 bg-white max-w-6xl flex items-center justify-between">
           <h1 className="font-bold text-3xl w-full">Insta Clone</h1>
@@ -212,6 +224,7 @@ const ProfilePage = () => {
           <ProfileUploads
             uploadList={uploadList}
             setuploadList={setuploadList}
+            arrangeImageData={arrangeImageData}
           />
           {openPicMenu && (
             <UploadPic
@@ -219,6 +232,12 @@ const ProfilePage = () => {
               username={username}
               uploadList={uploadList}
               setuploadList={setuploadList}
+            />
+          )}
+          {openImageViewer && (
+            <ImagePage
+              setopenImageViewer={setopenImageViewer}
+              imageData={imageData}
             />
           )}
         </div>

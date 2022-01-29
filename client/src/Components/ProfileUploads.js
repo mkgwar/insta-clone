@@ -1,4 +1,9 @@
-const ProfileUploads = ({ uploadList, setuploadList }) => {
+const ProfileUploads = ({
+  uploadList,
+  setuploadList,
+  setopenImageViewer,
+  arrangeImageData,
+}) => {
   return (
     <div className="w-full mt-16">
       <h1 className="text-3xl">Posts</h1>
@@ -12,7 +17,11 @@ const ProfileUploads = ({ uploadList, setuploadList }) => {
         <div className="w-full grid grid-cols-3 grid-rows-1 gap-4 py-8">
           {uploadList.map((upload) => {
             return (
-              <div key={upload._id} className="relative">
+              <div
+                key={upload._id}
+                className="relative cursor-pointer"
+                onClick={() => arrangeImageData(upload)}
+              >
                 <img
                   src={upload.image}
                   alt=""
