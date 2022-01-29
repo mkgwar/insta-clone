@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams, useNavigate } from "react-router-dom";
 import * as api from "../API/index";
+import UploadPic from "./UploadPic";
 
 const blankUser = { username: "", isEditable: false, desc: "", profilePic: "" };
 
@@ -15,6 +16,7 @@ const ProfilePage = () => {
   const [displayData, setdisplayData] = useState(blankUser);
   const [openEdit, setopenEdit] = useState(false);
   const [updatedDesc, setupdatedDesc] = useState(displayData.desc);
+  const [openPicMenu, setopenPicMenu] = useState(false);
 
   useEffect(() => {
     getUserData();
@@ -84,9 +86,15 @@ const ProfilePage = () => {
           <h1 className="font-bold text-3xl w-full">Insta Clone</h1>
 
           {authUser === username && authUser !== "NO_USER_FOUND" && (
-            <div className="relative h-full">
+            <div className="relative h-full flex items-center gap-8">
               <div
-                className="h-12 w-12 rounded-full bg-gray-200 cursor-pointer"
+                className="text-blue-600 text-center cursor-pointer"
+                onClick={() => setopenPicMenu(true)}
+              >
+                Upload
+              </div>
+              <div
+                className="h-12 w-12 rounded-full bg-gray-200 cursor-pointer relative"
                 onClick={() => setopenMenu(!openMenu)}
               >
                 {displayData.profilePic !== "" && (
@@ -96,17 +104,18 @@ const ProfilePage = () => {
                     className="h-full w-full object-cover rounded-full"
                   />
                 )}
+
+                {openMenu && (
+                  <div className="bg-white border-2 border-gray-200 absolute top-full left-1/2 -translate-x-1/2 z-10 overflow-auto flex flex-col mt-2">
+                    <span
+                      className="py-4 px-8 hover:bg-gray-200 cursor-pointer"
+                      onClick={logout}
+                    >
+                      Logout
+                    </span>
+                  </div>
+                )}
               </div>
-              {openMenu && (
-                <div className="bg-white border-2 border-gray-200 absolute top-full left-1/2 -translate-x-1/2 z-10 overflow-auto flex flex-col mt-2">
-                  <span
-                    className="py-4 px-8 hover:bg-gray-200 cursor-pointer"
-                    onClick={logout}
-                  >
-                    Logout
-                  </span>
-                </div>
-              )}
             </div>
           )}
           {authUser !== username && authUser !== "NO_USER_FOUND" && (
@@ -116,7 +125,7 @@ const ProfilePage = () => {
           )}
 
           {authUser === "NO_USER_FOUND" && authUser !== username && (
-            <div className="w-fit whitespace-nowrap space-x-4">
+            <div className="w-fit whitespace-nowrap space-x-4 text-blue-600">
               <Link to="/signin">Sign in</Link>
               <button
                 className="px-2 py-1 border-2 border-gray-200"
@@ -134,65 +143,68 @@ const ProfilePage = () => {
           {displayMessage}
         </div>
       ) : (
-        <div className="w-full mx-auto py-4 px-8 max-w-6xl flex items-start gap-16">
-          <div className="w-2/5 flex justify-end">
-            <div className="bg-gray-200 h-40 w-40 rounded-full relative">
-              {displayData.profilePic !== "" && (
-                <img
-                  src={displayData.profilePic}
-                  alt=""
-                  className="absolute h-full w-full object-cover rounded-full"
-                />
-              )}
-              {displayData.isEditable && (
-                <div className="h-full w-full bg-black opacity-0 rounded-full z-10 absolute text-white font-bold hover:bg-opacity-25 hover:opacity-100">
-                  <label
-                    htmlFor="profilepic"
-                    className="w-full h-full flex justify-center items-center cursor-pointer"
-                  >
-                    Upload pic
-                  </label>
-                  <input
-                    type="file"
-                    id="profilepic"
-                    name="profilepic"
-                    className="hidden"
-                    accept="image/x-png,image/gif,image/jpeg"
-                    onChange={uploadPic}
+        <div>
+          <div className="w-full mx-auto py-4 px-8 max-w-6xl flex items-start gap-16">
+            <div className="w-2/5 flex justify-end">
+              <div className="bg-gray-200 h-40 w-40 rounded-full relative">
+                {displayData.profilePic !== "" && (
+                  <img
+                    src={displayData.profilePic}
+                    alt=""
+                    className="absolute h-full w-full object-cover rounded-full"
                   />
-                </div>
-              )}
+                )}
+                {displayData.isEditable && (
+                  <div className="h-full w-full bg-black opacity-0 rounded-full z-10 absolute text-white font-bold hover:bg-opacity-25 hover:opacity-100">
+                    <label
+                      htmlFor="profilepic"
+                      className="w-full h-full flex justify-center items-center cursor-pointer"
+                    >
+                      Upload pic
+                    </label>
+                    <input
+                      type="file"
+                      id="profilepic"
+                      name="profilepic"
+                      className="hidden"
+                      accept="image/x-png,image/gif,image/jpeg"
+                      onChange={uploadPic}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col w-full">
-            <div className="flex w-full justify-between">
-              <h1 className="text-4xl">{displayData.username}</h1>
-              {displayData.isEditable && (
-                <button
-                  className="px-6 py-1 bg-white border-2 border-gray-200 rounded-lg"
-                  onClick={toggleEdit}
-                >
-                  Edit
-                </button>
-              )}
-            </div>
-            <div className="w-full mt-8">
-              {openEdit ? (
-                <div>
-                  <textarea
-                    value={updatedDesc}
-                    onChange={descHandler}
-                    className="w-3/5 h-32 p-4 resize-none focus:outline-none border-gray-200 border-2"
-                    placeholder="Add a description"
-                    onKeyDown={updateDesc}
-                  />
-                </div>
-              ) : (
-                <div className="w-3/5">{displayData.desc}</div>
-              )}
+            <div className="flex flex-col w-full">
+              <div className="flex w-full justify-between">
+                <h1 className="text-4xl">{displayData.username}</h1>
+                {displayData.isEditable && (
+                  <button
+                    className="px-6 py-1 bg-white border-2 border-gray-200 rounded-lg"
+                    onClick={toggleEdit}
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+              <div className="w-full mt-8">
+                {openEdit ? (
+                  <div>
+                    <textarea
+                      value={updatedDesc}
+                      onChange={descHandler}
+                      className="w-3/5 h-32 p-4 resize-none focus:outline-none border-gray-200 border-2"
+                      placeholder="Add a description"
+                      onKeyDown={updateDesc}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-3/5">{displayData.desc}</div>
+                )}
+              </div>
             </div>
           </div>
+          {openPicMenu && <UploadPic setopenPicMenu={setopenPicMenu} />}
         </div>
       )}
     </div>
