@@ -33,3 +33,18 @@ export const updateDesc = async (username, updatedDesc) => {
   );
   return data;
 };
+
+export const upload = async (username, uploadData) => {
+  const { data } = await axios.post(
+    `${URL}/user/${username}/upload`,
+    uploadData
+  );
+
+  return data;
+};
+
+export const getupload = async (username) => {
+  const { data } = await axios.get(`${URL}/user/${username}/getupload`);
+
+  return data;
+};

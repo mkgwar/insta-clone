@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams, useNavigate } from "react-router-dom";
 import * as api from "../API/index";
+import ProfileUploads from "./ProfileUploads";
 import UploadPic from "./UploadPic";
 
 const blankUser = { username: "", isEditable: false, desc: "", profilePic: "" };
@@ -17,6 +18,7 @@ const ProfilePage = () => {
   const [openEdit, setopenEdit] = useState(false);
   const [updatedDesc, setupdatedDesc] = useState(displayData.desc);
   const [openPicMenu, setopenPicMenu] = useState(false);
+  const [uploadList, setuploadList] = useState([]);
 
   useEffect(() => {
     getUserData();
@@ -76,6 +78,9 @@ const ProfilePage = () => {
 
       setupdatedDesc(data._doc.desc);
       setshowError(false);
+
+      const uploads = await api.getupload(username);
+      setuploadList(uploads);
     }
   };
 
@@ -128,7 +133,7 @@ const ProfilePage = () => {
             <div className="w-fit whitespace-nowrap space-x-4 text-blue-600">
               <Link to="/signin">Sign in</Link>
               <button
-                className="px-2 py-1 border-2 border-gray-200"
+                className="px-2 py-1 bg-blue-600 text-white"
                 onClick={() => navigate("/signup")}
               >
                 Sign Up
@@ -143,8 +148,8 @@ const ProfilePage = () => {
           {displayMessage}
         </div>
       ) : (
-        <div>
-          <div className="w-full mx-auto py-4 px-8 max-w-6xl flex items-start gap-16">
+        <div className="mx-auto max-w-6xl w-full">
+          <div className="w-full py-4 px-8 flex items-start gap-16">
             <div className="w-2/5 flex justify-end">
               <div className="bg-gray-200 h-40 w-40 rounded-full relative">
                 {displayData.profilePic !== "" && (
@@ -204,7 +209,18 @@ const ProfilePage = () => {
               </div>
             </div>
           </div>
-          {openPicMenu && <UploadPic setopenPicMenu={setopenPicMenu} />}
+          <ProfileUploads
+            uploadList={uploadList}
+            setuploadList={setuploadList}
+          />
+          {openPicMenu && (
+            <UploadPic
+              setopenPicMenu={setopenPicMenu}
+              username={username}
+              uploadList={uploadList}
+              setuploadList={setuploadList}
+            />
+          )}
         </div>
       )}
     </div>

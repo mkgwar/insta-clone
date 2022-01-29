@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const profilepic = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 const authenticateUser = (req, res, next) => {
   const token = req.headers["authorization"];
@@ -48,10 +48,9 @@ router.get("/:username", authenticateUser, async (req, res) => {
 
 router.post(
   "/:username/profilepic",
-  profilepic.single("profilepic"),
+  upload.single("profilepic"),
   async (req, res) => {
     const { username } = req.params;
-
     if (req.file) {
       const path = `http://localhost:5000/${req.file.path}`;
       await model.user.updateOne({ username }, { profilePic: path });
@@ -71,12 +70,46 @@ router.post(
 
 router.post("/:username/updatedesc", async (req, res) => {
   const { username } = req.params;
-  console.log(req.body);
   const { updatedDesc } = req.body;
 
   await model.user.updateOne({ username }, { desc: updatedDesc });
 
   res.json({ status: "OK", message: "Description updated successfully." });
+});
+
+router.post(
+  "/:username/upload",
+  upload.single("picupload"),
+  async (req, res) => {
+    const { username } = req.params;
+    const { desc } = req.body;
+
+    if (req.file) {
+      const path = `http://localhost:5000/${req.file.path}`;
+      const data = { username: username, image: path, desc: desc };
+
+      const newUpload = await new model.upload(data);
+      const newSave = await newUpload.save();
+
+      res.json({
+        status: "OK",
+        message: "pic uploaded successfully",
+        ...newSave,
+      });
+    } else {
+      res.json({
+        status: "Error",
+        message: "pic upload failed",
+      });
+    }
+  }
+);
+
+router.get("/:username/getupload", async (req, res) => {
+  const { username } = req.params;
+
+  const data = await model.upload.find({ username });
+  res.json(data);
 });
 
 export default router;
