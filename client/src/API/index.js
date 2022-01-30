@@ -48,3 +48,9 @@ export const getupload = async (username) => {
 
   return data;
 };
+
+export const getusers = async () => {
+  const { data } = await axios.get(`${URL}/user/getusers`);
+
+  return data;
+};

@@ -22,6 +22,7 @@ const ProfilePage = () => {
   const [uploadList, setuploadList] = useState([]);
   const [openImageViewer, setopenImageViewer] = useState(false);
   const [imageData, setimageData] = useState({});
+  const [userList, setuserList] = useState([]);
 
   useEffect(() => {
     getUserData();
@@ -89,6 +90,10 @@ const ProfilePage = () => {
 
       const uploads = await api.getupload(username);
       setuploadList(uploads);
+
+      const users = await api.getusers();
+      const updatedUsers = users.filter((user) => user.username !== username);
+      setuserList(updatedUsers);
     }
   };
 
@@ -160,86 +165,105 @@ const ProfilePage = () => {
           {displayMessage}
         </div>
       ) : (
-        <div className="mx-auto max-w-6xl w-full">
-          <div className="w-full py-4 px-8 flex items-start gap-16">
-            <div className="w-2/5 flex justify-end">
-              <div className="bg-gray-200 h-40 w-40 rounded-full relative">
-                {displayData.profilePic !== "" && (
-                  <img
-                    src={displayData.profilePic}
-                    alt=""
-                    className="absolute h-full w-full object-cover rounded-full"
-                  />
-                )}
-                {displayData.isEditable && (
-                  <div className="h-full w-full bg-black opacity-0 rounded-full z-2 absolute text-white font-bold hover:bg-opacity-25 hover:opacity-100">
-                    <label
-                      htmlFor="profilepic"
-                      className="w-full h-full flex justify-center items-center cursor-pointer"
-                    >
-                      Upload pic
-                    </label>
-                    <input
-                      type="file"
-                      id="profilepic"
-                      name="profilepic"
-                      className="hidden"
-                      accept="image/x-png,image/gif,image/jpeg"
-                      onChange={uploadPic}
+        <div className="mx-auto max-w-6xl w-full flex items-start">
+          <div className="w-full">
+            <div className="w-full py-4 px-8 flex items-start gap-16">
+              <div className="w-2/5 flex justify-end">
+                <div className="bg-gray-200 h-40 w-40 rounded-full relative">
+                  {displayData.profilePic !== "" && (
+                    <img
+                      src={displayData.profilePic}
+                      alt=""
+                      className="absolute h-full w-full object-cover rounded-full"
                     />
-                  </div>
-                )}
+                  )}
+                  {displayData.isEditable && (
+                    <div className="h-full w-full bg-black opacity-0 rounded-full z-2 absolute text-white font-bold hover:bg-opacity-25 hover:opacity-100">
+                      <label
+                        htmlFor="profilepic"
+                        className="w-full h-full flex justify-center items-center cursor-pointer"
+                      >
+                        Upload pic
+                      </label>
+                      <input
+                        type="file"
+                        id="profilepic"
+                        name="profilepic"
+                        className="hidden"
+                        accept="image/x-png,image/gif,image/jpeg"
+                        onChange={uploadPic}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="flex flex-col w-full">
-              <div className="flex w-full justify-between">
-                <h1 className="text-4xl">{displayData.username}</h1>
-                {displayData.isEditable && (
-                  <button
-                    className="px-6 py-1 bg-white border-2 border-gray-200 rounded-lg"
-                    onClick={toggleEdit}
-                  >
-                    Edit
-                  </button>
-                )}
-              </div>
-              <div className="w-full mt-8">
-                {openEdit ? (
-                  <div>
-                    <textarea
-                      value={updatedDesc}
-                      onChange={descHandler}
-                      className="w-3/5 h-32 p-4 resize-none focus:outline-none border-gray-200 border-2"
-                      placeholder="Add a description"
-                      onKeyDown={updateDesc}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-3/5">{displayData.desc}</div>
-                )}
+              <div className="flex flex-col w-full">
+                <div className="flex w-full justify-between">
+                  <h1 className="text-4xl">{displayData.username}</h1>
+                  {displayData.isEditable && (
+                    <button
+                      className="px-6 py-1 bg-white border-2 border-gray-200 rounded-lg"
+                      onClick={toggleEdit}
+                    >
+                      Edit
+                    </button>
+                  )}
+                </div>
+                <div className="w-full mt-8">
+                  {openEdit ? (
+                    <div>
+                      <textarea
+                        value={updatedDesc}
+                        onChange={descHandler}
+                        className="w-3/5 h-32 p-4 resize-none focus:outline-none border-gray-200 border-2"
+                        placeholder="Add a description"
+                        onKeyDown={updateDesc}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-3/5">{displayData.desc}</div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-          <ProfileUploads
-            uploadList={uploadList}
-            setuploadList={setuploadList}
-            arrangeImageData={arrangeImageData}
-          />
-          {openPicMenu && (
-            <UploadPic
-              setopenPicMenu={setopenPicMenu}
-              username={username}
+            <ProfileUploads
               uploadList={uploadList}
               setuploadList={setuploadList}
+              arrangeImageData={arrangeImageData}
             />
-          )}
-          {openImageViewer && (
-            <ImagePage
-              setopenImageViewer={setopenImageViewer}
-              imageData={imageData}
-            />
-          )}
+            {openPicMenu && (
+              <UploadPic
+                setopenPicMenu={setopenPicMenu}
+                username={username}
+                uploadList={uploadList}
+                setuploadList={setuploadList}
+              />
+            )}
+            {openImageViewer && (
+              <ImagePage
+                setopenImageViewer={setopenImageViewer}
+                imageData={imageData}
+              />
+            )}
+          </div>
+          <div className="w-80 p-4 px-8 mt-4 bg-white shadow-sm border-2 border-gray-200">
+            <h1 className="text-xl font-bold">Other Users</h1>
+            <div className="mt-4 ">
+              {userList.map((user) => {
+                return (
+                  <h2 key={user._id}>
+                    <Link
+                      to={"/user/" + user.username}
+                      className="text-blue-600"
+                    >
+                      {user.username}
+                    </Link>
+                  </h2>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
     </div>

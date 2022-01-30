@@ -17,6 +17,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+router.get("/getusers", async (req, res) => {
+  const users = await model.user.find();
+  res.json(users);
+});
+
 const authenticateUser = (req, res, next) => {
   const token = req.headers["authorization"];
   if (token != "NO_TOKEN_FOUND") {
