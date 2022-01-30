@@ -7,7 +7,7 @@ const ImagePage = ({ setopenImageViewer, imageData }) => {
         </div>
         <div className="w-1/2 h-4/5 bg-white p-8 relative">
           <div
-            className="absolute -top-2 -right-2 bg-white h-8 w-8 rounded-full cursor-pointer"
+            className="absolute -top-2 -right-2 bg-gray-200 h-8 w-8 rounded-full cursor-pointer"
             onClick={() => setopenImageViewer(false)}
           >
             <div className="bg-black h-4 w-1 rounded-full rotate-45 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
