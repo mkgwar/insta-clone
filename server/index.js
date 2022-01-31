@@ -15,7 +15,7 @@ const DB_URL =
   process.env.DB_URL ||
   "mongodb+srv://admin:admin2106@cluster0.aosd2.mongodb.net/instaDB?retryWrites=true&w=majority";
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 mongoose
   .connect(DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
