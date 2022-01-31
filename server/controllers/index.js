@@ -1,6 +1,8 @@
 import * as model from "../Models/index.js";
 import jwt from "jsonwebtoken";
 
+const SECRET = process.env.SECRET || "topsecretcode";
+
 export const signupMiddleware = async (req, res, next) => {
   const { username } = req.body;
 
@@ -42,7 +44,7 @@ export const signin = async (req, res) => {
       res.json({ status: "Error", message: "Username or password incorrect." });
     } else {
       const payload = { username: username };
-      const token = jwt.sign(payload, "topsecretcode");
+      const token = jwt.sign(payload, SECRET);
       res.json({
         status: "OK",
         message: "Login successful",

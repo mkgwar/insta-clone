@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
 const DB_URL =
+  process.env.DB_URL ||
   "mongodb+srv://admin:admin2106@cluster0.aosd2.mongodb.net/instaDB?retryWrites=true&w=majority";
 
 const PORT = 5000;

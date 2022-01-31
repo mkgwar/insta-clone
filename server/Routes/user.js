@@ -5,6 +5,8 @@ import multer from "multer";
 
 const router = express.Router();
 
+const SECRET = process.env.SECRET || "topsecretcode";
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -25,7 +27,7 @@ router.get("/getusers", async (req, res) => {
 const authenticateUser = (req, res, next) => {
   const token = req.headers["authorization"];
   if (token != "NO_TOKEN_FOUND") {
-    const result = jwt.verify(token, "topsecretcode");
+    const result = jwt.verify(token, SECRET);
     req.authUsername = result.username;
   } else {
     req.authUsername = "";
