@@ -5,7 +5,7 @@ import multer from "multer";
 
 const router = express.Router();
 
-const SECRET = process.env.SECRET || "topsecretcode";
+const SECRET = process.env.SECRET || process.env.LOCAL_SECRET;
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -59,7 +59,7 @@ router.post(
   async (req, res) => {
     const { username } = req.params;
     if (req.file) {
-      const path = `http://localhost:5000/${req.file.path}`;
+      const path = `https://insta-clone-mkgwar.herokuapp.com/${req.file.path}`;
       await model.user.updateOne({ username }, { profilePic: path });
       res.json({
         status: "OK",
@@ -92,7 +92,7 @@ router.post(
     const { desc } = req.body;
 
     if (req.file) {
-      const path = `http://localhost:5000/${req.file.path}`;
+      const path = `https://insta-clone-mkgwar.herokuapp.com/${req.file.path}`;
       const data = { username: username, image: path, desc: desc };
 
       const newUpload = await new model.upload(data);

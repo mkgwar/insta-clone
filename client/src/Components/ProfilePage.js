@@ -250,18 +250,24 @@ const ProfilePage = () => {
           <div className="w-80 p-4 px-8 mt-4 bg-white shadow-sm border-2 border-gray-200">
             <h1 className="text-xl font-bold">Other Users</h1>
             <div className="mt-4 ">
-              {userList.map((user) => {
-                return (
-                  <h2 key={user._id}>
-                    <Link
-                      to={"/user/" + user.username}
-                      className="text-blue-600"
-                    >
-                      {user.username}
-                    </Link>
-                  </h2>
-                );
-              })}
+              {userList.length ? (
+                <div>
+                  {userList.map((user) => {
+                    return (
+                      <h2 key={user._id}>
+                        <Link
+                          to={"/user/" + user.username}
+                          className="text-blue-600"
+                        >
+                          {user.username}
+                        </Link>
+                      </h2>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div>No users</div>
+              )}
             </div>
           </div>
         </div>

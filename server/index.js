@@ -4,16 +4,16 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import * as controller from "./controllers/index.js";
 import userRoutes from "./Routes/user.js";
+import env from "dotenv";
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
+env.config();
 
-const DB_URL =
-  process.env.DB_URL ||
-  "mongodb+srv://admin:admin2106@cluster0.aosd2.mongodb.net/instaDB?retryWrites=true&w=majority";
+const DB_URL = process.env.DB_URL || process.env.LOCAL_DB_URL;
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,7 +1,7 @@
 import * as model from "../Models/index.js";
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.SECRET || "topsecretcode";
+const SECRET = process.env.SECRET || process.env.LOCAL_SECRET;
 
 export const signupMiddleware = async (req, res, next) => {
   const { username } = req.body;

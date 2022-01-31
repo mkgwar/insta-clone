@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:5000";
+const URL = "https://insta-clone-mkgwar.herokuapp.com";
 
 export const signup = async (userData) => {
   const { data } = await axios.post(`${URL}/signup`, userData);
